@@ -30,7 +30,7 @@ const emptyInvestment = {
   transactionDate: '',
 }
 
-export function InvestmentFormJsx() {
+export function InvestmentFormJsx({ onSuccess }) {
 
   
   const router = useRouter()
@@ -109,14 +109,13 @@ export function InvestmentFormJsx() {
       .then(response => response.json())
       .then(data => {
         console.log('Success:', data);
-        router.refresh();
-        router.replace('/dashboard')
-        router.push('/dashboard');
+      
       })
       .catch(error => console.error(error));
   
     // Reset and close the form after successful submission
     setOpen(false);
+     if (onSuccess) onSuccess();
   };
   
 

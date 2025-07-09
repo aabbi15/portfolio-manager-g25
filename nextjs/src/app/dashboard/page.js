@@ -34,43 +34,44 @@ const DashboardJs = () => {
     const [topGainers, setTopGainers] = useState([]); // State for top gainers
 
     const [loading0, setLoading0] = useState(true);
-    const [loading1, setLoading1] = useState(true);
+    // const [loading1, setLoading1] = useState(false);
 
     const [error, setError] = useState(null);
 
     // const { user, error, isLoading } = useUser();
 
 
+    const fetchPortfolio = () => {
+  setLoading0(true); 
+
+  fetch("/api/getPortfolio", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ hi: "hi" }),
+  })
+    .then((res) => res.json())
+    .then((data) => {
+      setTransactions(data.transactions);
+      setLoading0(false); 
+    })
+    .catch((error) => {
+      console.error("Error fetching portfolio data:", error);
+      setLoading0(false); 
+      setError("Failed to fetch portfolio data. Please try again later.");
+    });
+};
 
 
     useEffect(() => {
         // Fetch portfolio data
-        setLoading0(true); 
-    
-        fetch("/api/getPortfolio", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ hi: "hi" }),
-        })
-            .then((res) => res.json())
-            .then((data) => {
-                // console.log("Fetched portfolio data:", data);
-                setTransactions(data.transactions);
-                setLoading0(false); 
-            })
-            .catch((error) => {
-                console.error("Error fetching portfolio data:", error);
-                setLoading0(false); 
-                setError("Failed to fetch portfolio data. Please try again later.");
-            });
-
+      fetchPortfolio();
 
     }, []);
     
     useEffect(() => {
       
     
-        setLoading1(true); 
+        setLoading0(true); 
     
         const fetchStockPrices = async () => {
             try {
@@ -108,7 +109,7 @@ const DashboardJs = () => {
             } catch (error) {
                 console.error("Error fetching stock prices:", error);
             } finally {
-                setLoading1(false); 
+                setLoading0(false); 
             }
         };
     
@@ -182,7 +183,8 @@ const DashboardJs = () => {
                 <div className="my-8 flex items-center justify-between px-5 ">
                     <h1 className="text-3xl font-bold">My Portfolio</h1>
                     <div className="flex gap-2">
-                        <InvestmentFormJsx />
+                        <InvestmentFormJsx onSuccess={fetchPortfolio} />
+
                     </div>
                 </div>
                 <div className="min-h-screen flex flex-col text-xl text-bold justify-center items
@@ -198,14 +200,15 @@ const DashboardJs = () => {
 
     // If no transactions are found, display a message and return
 
-    else if (transactions.length === 0 || loading1) {
+    else if (transactions.length === 0 ) {
         return (
           <div>
             <HeaderJs />
             <div className="my-8 flex items-center justify-between px-5 ">
               <h1 className="text-3xl font-bold">My Portfolio</h1>
               <div className="flex gap-2">
-                <InvestmentFormJsx />
+                <InvestmentFormJsx onSuccess={fetchPortfolio} />
+
               </div>
             </div>
             <div className="min-h-screen flex flex-col text-xl text-bold justify-center items-center bg-gray-100 p-8">
@@ -241,9 +244,10 @@ const DashboardJs = () => {
                                 <div className="flex gap-2">
 
 
-                                    <InvestmentFormJsx />
+                                    <InvestmentFormJsx onSuccess={fetchPortfolio} />
 
-                                    <DeleteInvestmentDialogJsx mytransactions={transactions}/>
+
+                                    <DeleteInvestmentDialogJsx mytransactions={transactions} />
 
                                 </div>
 
