@@ -16,7 +16,7 @@ export async function GET(req, res) {
             result = err.result;
         }
 
-        console.log(result);
+        // console.log(result);
 
         // Extract relevant data for each stock
         const gainers = result.quotes.map(stock => ({
@@ -25,14 +25,15 @@ export async function GET(req, res) {
             gain: stock.regularMarketChangePercent
         }));
 
-        console.log('Extracted gainers:', gainers);
+        // console.log('Extracted gainers:', gainers);
 
+        console.log('Daily gainers fetched successfully');
         // Return the array of objects
         return NextResponse.json(gainers);
     } catch (err) {
 
 
-        console.error('Error fetching daily gainers:', err);
+        console.log('Error fetching daily gainers:', err);
         return NextResponse.json({ error: 'Failed to fetch daily gainers' }, { status: 500 });
     }
 }

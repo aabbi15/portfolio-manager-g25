@@ -32,7 +32,7 @@ const MyChart = ({stockId,startDate}) => {
   const fetchData = async () => {
 
 
-      fetch('https://portfolio-manager-g25.vercel.app/api/get-stock-data', {
+      fetch('/api/get-stock-data', {
         method: 'POST',
         headers: {
             'Content-type': 'application/json',
@@ -50,7 +50,7 @@ const MyChart = ({stockId,startDate}) => {
         .then((response) => response.json())
         .then((data) => {
             // console.log(data);
-            console.log('Fetched data:', data.quotes);
+            // console.log('Fetched data:', data.quotes);
             setData(data.quotes); // Store the fetched data in the state
             // setLoading(false);
         })
@@ -97,7 +97,7 @@ const MyChart = ({stockId,startDate}) => {
   }, [interval, data]);
 
   useEffect(() => {
-    console.log(stockId, period1, period2);
+    // console.log(stockId, period1, period2);
     fetchData();
 }, [stockId, period1, period2]);
 

@@ -24,6 +24,8 @@ function App()  {
 
     const tempy = useUser();
 
+    // console.log(tempy);
+
     if(tempy.user){
       redirect('/profile');
     }

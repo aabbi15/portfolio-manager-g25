@@ -1,27 +1,21 @@
 'use client'
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/app/components/ui/card"
-import { Button } from "@/app/components/ui/button"
 import { Tabs, TabsList, TabsTrigger } from "@/app/components/ui/tabs"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/app/components/ui/select";
 import { HeaderJs } from "../components/header";
-import { PlusIcon } from "@heroicons/react/24/outline";
 import { useEffect, useState } from "react";
 import { InvestmentFormJsx } from "../components/transactionForm";
-import axios from "axios";
 import MyChart from "../components/MyChart";
 import AllocationCard from "../components/allocation-chart";
 import { TopGainersAndLosers } from "../components/top-gnl";
 import { InvestmentByYear } from "../components/per-year";
 import MyLoader from "../components/loader";
-import { useUser } from '@auth0/nextjs-auth0/client';
-import { Delete } from "lucide-react";
+
 import { DeleteInvestmentDialogJsx } from "@/components/delete-investment-dialog";
 import {SunJs} from "@/components/ui/sun";
 import { StockAnalysisCardComponent } from "@/components/stock-analysis-card";
 
 
-const sectors = ["Tech", "Petroleum", "Finance", "Healthcare", "Defense", "Retail"];
 
 
 
@@ -39,7 +33,10 @@ const DashboardJs = () => {
     const [stockDetails, setStockDetails] = useState([]);
     const [topGainers, setTopGainers] = useState([]); // State for top gainers
 
-    const [loading, setLoading] = useState(true);
+    const [loading0, setLoading0] = useState(true);
+    const [loading1, setLoading1] = useState(true);
+
+    const [error, setError] = useState(null);
 
     // const { user, error, isLoading } = useUser();
 
@@ -48,7 +45,7 @@ const DashboardJs = () => {
 
     useEffect(() => {
         // Fetch portfolio data
-        setLoading(true); // Start loading when fetching begins
+        setLoading0(true); 
     
         fetch("/api/getPortfolio", {
             method: "POST",
@@ -59,26 +56,26 @@ const DashboardJs = () => {
             .then((data) => {
                 // console.log("Fetched portfolio data:", data);
                 setTransactions(data.transactions);
-                setLoading(false); // Stop loading after transactions are fetched
+                setLoading0(false); 
             })
             .catch((error) => {
                 console.error("Error fetching portfolio data:", error);
-                setLoading(false); // Stop loading even if there is an error
+                setLoading0(false); 
+                setError("Failed to fetch portfolio data. Please try again later.");
             });
+
+
     }, []);
     
     useEffect(() => {
-        if (!transactions || transactions.length === 0) {
-            return; // No transactions, no need to fetch stock prices
-        }
+      
     
-        setLoading(true); // Start loading for stock price fetch
+        setLoading1(true); 
     
         const fetchStockPrices = async () => {
             try {
                 const stockIds = transactions.map((t) => t.stockId);
     
-                // Fetch current stock prices
                 const response = await fetch("/api/all-stock-details", {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
@@ -87,7 +84,6 @@ const DashboardJs = () => {
     
                 const data = await response.json();
     
-                // Calculate portfolio values
                 let totalCurrentValue = 0;
                 let totalInvested = 0;
                 let totalDayChange = 0;
@@ -112,7 +108,7 @@ const DashboardJs = () => {
             } catch (error) {
                 console.error("Error fetching stock prices:", error);
             } finally {
-                setLoading(false); // Stop loading after stock prices are fetched
+                setLoading1(false); 
             }
         };
     
@@ -175,14 +171,34 @@ const DashboardJs = () => {
         ));
     }
 
-    if (loading) {
+    if (loading0) {
         return <MyLoader />
     }
+
+    if (error) {
+        return (
+            <div>
+                <HeaderJs />
+                <div className="my-8 flex items-center justify-between px-5 ">
+                    <h1 className="text-3xl font-bold">My Portfolio</h1>
+                    <div className="flex gap-2">
+                        <InvestmentFormJsx />
+                    </div>
+                </div>
+                <div className="min-h-screen flex flex-col text-xl text-bold justify-center items
+                    center bg-gray-100 p-8">
+                    <p className="text-red-500">{error}</p>
+                    <SunJs />
+                </div>
+            </div>
+        );
+    }
+
 
 
     // If no transactions are found, display a message and return
 
-    else if (loading == false && transactions.length === 0) {
+    else if (transactions.length === 0 || loading1) {
         return (
           <div>
             <HeaderJs />

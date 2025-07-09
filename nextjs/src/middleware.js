@@ -11,7 +11,7 @@ export async function middleware(req) {
   const user = cookieStore.get('appSession')
 
   const { pathname } = req.nextUrl;
-  // console.log(pathname);
+  console.log(pathname);
 
 
   // If no session or user, redirect to /landing

@@ -92,7 +92,7 @@ export function StockAnalysisCardComponent({ stockDetails, transactions }) {
   return (
     <Card className="w-[350px]">
       <CardHeader>
-        <CardTitle>Stock Analysis</CardTitle>
+        <CardTitle>Stock Analysis for Your Stocks using LSTM</CardTitle>
       </CardHeader>
       <CardContent>
         <p className="text-2xl font-bold">Current Stock Analysis</p>
@@ -104,7 +104,7 @@ export function StockAnalysisCardComponent({ stockDetails, transactions }) {
           </DialogTrigger>
           <DialogContent className="sm:max-w-[425px]">
             <DialogHeader>
-              <DialogTitle>Stock Analysis for All Stocks</DialogTitle>
+              <DialogTitle>Stock Analysis for All Stocks using LSTM</DialogTitle>
             </DialogHeader>
             {isLoading && (
               <div className="flex items-center justify-center p-8">
@@ -117,7 +117,7 @@ export function StockAnalysisCardComponent({ stockDetails, transactions }) {
                 <TableHeader>
                   <TableRow>
                     <TableHead>Stock ID</TableHead>
-                    <TableHead>Future Price</TableHead>
+                    <TableHead>Predicted 1 week later Price</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
